@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  AppShell,
-  Burger,
-  Divider,
-  Group,
-  ScrollArea,
-  Title,
-} from "@mantine/core";
+import { AppShell, Burger, Divider, Group, ScrollArea } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import SideNav from "./SideNav";
 import { IconBrandMantine, IconLogout } from "@tabler/icons-react";
@@ -16,13 +9,11 @@ import ThemeSwitch from "../ui/ThemeSwitch";
 import classes from "@/styles/NavbarSimple.module.css";
 import cx from "clsx";
 import ChatInput from "../ui/ChatInput";
-import { useSearchParams } from "next/navigation";
+import FriendTitle from "../ui/FriendTitle";
+import { Suspense } from "react";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [opened, { toggle }] = useDisclosure();
-  const searchParams = useSearchParams();
-
-  const friend = searchParams.get("friend");
 
   return (
     <AppShell
@@ -40,9 +31,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <Group h="100%" px="md">
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
           <IconBrandMantine size={30} />
-          <Title>
-            {friend && `${friend.charAt(0).toUpperCase()}${friend.slice(1)}`}
-          </Title>
+          <Suspense>
+            <FriendTitle />
+          </Suspense>
         </Group>
       </AppShell.Header>
 
