@@ -7,7 +7,7 @@ export default function FriendTitle() {
 
   const friend = searchParams.get("friend");
   return (
-    <Title>
+    <Title order={4}>
       {friend && `${friend.charAt(0).toUpperCase()}${friend.slice(1)}`}
     </Title>
   );

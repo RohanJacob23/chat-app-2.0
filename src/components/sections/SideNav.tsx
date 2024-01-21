@@ -33,7 +33,7 @@ const data = [
   { link: "", name: "Roo", avatar: null },
 ];
 
-export default function SideNav() {
+export default function SideNav({ toggle }: { toggle: () => void }) {
   const [active, setActive] = useState("Billing");
   const router = useRouter();
 
@@ -44,6 +44,7 @@ export default function SideNav() {
       key={i}
       onClick={(event) => {
         event.preventDefault();
+        toggle();
         setActive(item.name);
         router.replace(`?friend=${item.name}`);
       }}

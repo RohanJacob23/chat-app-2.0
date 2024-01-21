@@ -19,6 +19,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <AppShell
       layout="alt"
       header={{ height: 60 }}
+      footer={{ height: 70 }}
       navbar={{
         width: 300,
         breakpoint: "sm",
@@ -54,7 +55,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <Divider />
 
         <AppShell.Section grow component={ScrollArea}>
-          <SideNav />
+          <SideNav toggle={toggle} />
         </AppShell.Section>
 
         <Divider />
@@ -85,7 +86,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
       <AppShell.Footer
         className="flex flex-row items-center justify-center"
-        py="md"
+        // py="md"
         px={{ sm: "xl", base: "md" }}
       >
         <ChatInput />
