@@ -1,8 +1,8 @@
-import { Image, Container, Title, Button, Group, Text } from "@mantine/core";
+import { Image, Container, Title, Text } from "@mantine/core";
 import NextImage from "next/image";
 import classes from "./HeroBullets.module.css";
 import FeatureList from "@/components/ui/FeatureList";
-import cx from "clsx";
+import SignInButton from "@/components/ui/SignInButton";
 
 export default function page() {
   return (
@@ -21,23 +21,7 @@ export default function page() {
 
           <FeatureList />
 
-          <Group mt={30}>
-            <Button
-              radius="xl"
-              size="md"
-              className={cx(classes.control, "max-md:px-2")}
-            >
-              Get started
-            </Button>
-            <Button
-              variant="default"
-              radius="xl"
-              size="md"
-              className={cx(classes.control, "max-md:px-2")}
-            >
-              Source code
-            </Button>
-          </Group>
+          <SignInButton style={classes.button} />
         </div>
         <Image
           component={NextImage}

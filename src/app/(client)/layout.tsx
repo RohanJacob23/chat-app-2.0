@@ -1,9 +1,16 @@
 import AppLayout from "@/components/sections/AppLayout";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]/route";
+import { redirect } from "next/navigation";
 
-export default function ClientLayout({
+export default async function ClientLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <AppLayout>{children}</AppLayout>;
+  const session = await getServerSession(authOptions);
+
+  if (!session) redirect("/home");
+
+  return <AppLayout session={session}>{children}</AppLayout>;
 }

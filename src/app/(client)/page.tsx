@@ -1,65 +1,34 @@
-import { Avatar, Flex, ScrollArea, Text } from "@mantine/core";
+import { Flex, Text, Title } from "@mantine/core";
 
 export default function Home() {
   return (
-    <ScrollArea h="100%">
-      <section className="flex flex-col gap-4">
-        <Flex
-          direction={"row-reverse"}
-          gap={"xs"}
-          align={"center"}
-          className="self-end"
+    <Flex
+      direction="column"
+      align="center"
+      justify="center"
+      className="text-center"
+      mx="auto"
+      gap="md"
+      maw={900}
+    >
+      <Title>
+        A{" "}
+        <Text
+          component="span"
+          variant="gradient"
+          gradient={{ from: "blue", to: "cyan" }}
+          inherit
         >
-          <Avatar src={null}>R</Avatar>
-          <Text className="bg-[var(--mantine-color-blue-filled)] p-2 px-4 rounded-2xl shadow-md max-w-52 md:max-w-80 text-base">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil
-            tempora nam quia aliquam, alias aliquid dicta exercitationem
-            excepturi rerum eligendi officiis iusto nobis ducimus fugiat
-            assumenda nostrum! Aliquid, nihil ipsa.
-          </Text>
-        </Flex>
+          fully featured
+        </Text>{" "}
+        React components and hooks library
+      </Title>
 
-        <Flex
-          direction={"row"}
-          gap={"xs"}
-          align={"center"}
-          className="self-start"
-        >
-          <Avatar src={null}>R</Avatar>
-          <Text className="bg-[var(--mantine-color-default)] p-2 px-4 rounded-2xl shadow-md max-w-52 md:max-w-80 text-base">
-            Hello world
-          </Text>
-        </Flex>
-
-        <Flex
-          direction={"row-reverse"}
-          gap={"xs"}
-          align={"center"}
-          className="self-end"
-        >
-          <Avatar src={null}>R</Avatar>
-          <Text className="bg-[var(--mantine-color-blue-filled)] p-2 px-4 rounded-2xl shadow-md max-w-52 md:max-w-80 text-base">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil
-            tempora
-          </Text>
-        </Flex>
-
-        {Array.from({ length: 5 }, (_, i) => (
-          <Flex
-            key={i}
-            direction={"row-reverse"}
-            gap={"xs"}
-            align={"center"}
-            className="self-end"
-          >
-            <Avatar src={null}>R</Avatar>
-            <Text className="bg-[var(--mantine-color-blue-filled)] p-2 px-4 rounded-2xl shadow-md max-w-52 md:max-w-80 text-base">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil
-              tempora
-            </Text>
-          </Flex>
-        ))}
-      </section>
-    </ScrollArea>
+      <Text c="dimmed">
+        Build fully functional accessible web applications with ease - Mantine
+        includes more than 100 customizable components and hooks to cover you in
+        any situation
+      </Text>
+    </Flex>
   );
 }

@@ -1,4 +1,7 @@
+"use client";
+
 import { Button, ButtonProps } from "@mantine/core";
+import { signIn } from "next-auth/react";
 
 function GoogleIcon(props: React.ComponentPropsWithoutRef<"svg">) {
   return (
@@ -32,5 +35,12 @@ function GoogleIcon(props: React.ComponentPropsWithoutRef<"svg">) {
 export function GoogleButton(
   props: ButtonProps & React.ComponentPropsWithoutRef<"button">
 ) {
-  return <Button leftSection={<GoogleIcon />} variant="default" {...props} />;
+  return (
+    <Button
+      onClick={() => signIn("google", { callbackUrl: "/" })}
+      leftSection={<GoogleIcon />}
+      variant="default"
+      {...props}
+    />
+  );
 }

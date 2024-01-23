@@ -46,7 +46,7 @@ export default function SideNav({ toggle }: { toggle: () => void }) {
         event.preventDefault();
         toggle();
         setActive(item.name);
-        router.replace(`?friend=${item.name}`);
+        router.replace(`/${44}?friend=${item.name}`);
       }}
     >
       <Avatar mr="md" src={item.avatar} alt={item.name}>

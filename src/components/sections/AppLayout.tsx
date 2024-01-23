@@ -1,6 +1,13 @@
 "use client";
 
-import { AppShell, Burger, Divider, Group, ScrollArea } from "@mantine/core";
+import {
+  AppShell,
+  Burger,
+  Divider,
+  Group,
+  ScrollArea,
+  UnstyledButton,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import SideNav from "./SideNav";
 import { IconBrandMantine, IconLogout } from "@tabler/icons-react";
@@ -11,9 +18,20 @@ import cx from "clsx";
 import ChatInput from "../ui/ChatInput";
 import FriendTitle from "../ui/FriendTitle";
 import { Suspense } from "react";
+import { signOut } from "next-auth/react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { Session } from "next-auth";
 
-export default function AppLayout({ children }: { children: React.ReactNode }) {
+export default function AppLayout({
+  children,
+  session,
+}: {
+  children: React.ReactNode;
+  session: Session | null;
+}) {
   const [opened, { toggle }] = useDisclosure();
+  const router = useRouter();
 
   return (
     <AppShell
@@ -42,7 +60,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <AppShell.Navbar p="md">
         <AppShell.Section mb={8}>
           <Group wrap="nowrap">
-            <UserButton />
+            <UserButton
+              email={session?.user.email!}
+              name={session?.user.name!}
+              image={session?.user.image}
+            />
             <Burger
               opened={opened}
               onClick={toggle}
@@ -62,13 +84,20 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
         <AppShell.Section mt={8}>
           <ThemeSwitch />
-          <a
-            href="#"
+          <UnstyledButton
+            // href="#"
             className={cx(
               classes.link,
-              "rounded-md hover:!bg-[var(--mantine-color-red-light-hover)] !text-[var(--mantine-color-red-text)]"
+              "w-full rounded-md hover:!bg-[var(--mantine-color-red-light-hover)] !text-[var(--mantine-color-red-text)]"
             )}
-            onClick={(event) => event.preventDefault()}
+            onClick={() => {
+              signOut({ callbackUrl: "/auth", redirect: false }).then(
+                ({ url }) => {
+                  router.push(url);
+                  toast.info("Successfully logged out");
+                }
+              );
+            }}
           >
             <IconLogout
               className={cx(
@@ -78,11 +107,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               stroke={1.5}
             />
             <span>Logout</span>
-          </a>
+          </UnstyledButton>
         </AppShell.Section>
       </AppShell.Navbar>
 
-      <AppShell.Main>{children}</AppShell.Main>
+      <AppShell.Main display="flex">{children}</AppShell.Main>
 
       <AppShell.Footer
         className="flex flex-row items-center justify-center"

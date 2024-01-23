@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "@mantine/core/styles.css";
 import "./globals.css";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +24,7 @@ export default function RootLayout({
       </head>
 
       <body className={inter.className}>
+        <Toaster position="top-center" richColors closeButton />
         <MantineProvider defaultColorScheme="auto">{children}</MantineProvider>
       </body>
     </html>
