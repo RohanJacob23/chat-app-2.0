@@ -111,13 +111,12 @@ export default function AppLayout({
         </AppShell.Section>
       </AppShell.Navbar>
 
-      <AppShell.Main display="flex" w="100%">
+      <AppShell.Main display="flex" w="100%" mah="100vh">
         {children}
       </AppShell.Main>
 
       <AppShell.Footer
         className="flex flex-row items-center justify-center"
-        // py="md"
         px={{ sm: "xl", base: "md" }}
       >
         <ChatInput />
