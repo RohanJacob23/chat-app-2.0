@@ -111,7 +111,9 @@ export default function AppLayout({
         </AppShell.Section>
       </AppShell.Navbar>
 
-      <AppShell.Main display="flex">{children}</AppShell.Main>
+      <AppShell.Main display="flex" w="100%">
+        {children}
+      </AppShell.Main>
 
       <AppShell.Footer
         className="flex flex-row items-center justify-center"
