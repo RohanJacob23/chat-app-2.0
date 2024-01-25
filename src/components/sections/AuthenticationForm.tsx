@@ -57,7 +57,7 @@ export default function AuthenticationForm({
 
   useEffect(() => {
     form.reset();
-  }, [type]);
+  }, [type, form]);
 
   /**
    * Handles the form submission for registration or sign in.
