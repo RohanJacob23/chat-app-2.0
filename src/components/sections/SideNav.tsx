@@ -5,54 +5,35 @@ import { Avatar, Container, ScrollArea } from "@mantine/core";
 import classes from "@/styles/NavbarSimple.module.css";
 import cx from "clsx";
 import { useRouter } from "next/navigation";
+import { FriendList } from "@/type/type";
 
-const data = [
-  { link: "", name: "Rohan Jacob", avatar: null },
-  { link: "", name: "Jacob", avatar: null },
-  { link: "", name: "Jack", avatar: null },
-  { link: "", name: "Roo", avatar: null },
-  { link: "", name: "Roo", avatar: null },
-  { link: "", name: "Roo", avatar: null },
-  { link: "", name: "Roo", avatar: null },
-  { link: "", name: "Roo", avatar: null },
-  { link: "", name: "Roo", avatar: null },
-  { link: "", name: "Roo", avatar: null },
-  { link: "", name: "Roo", avatar: null },
-  { link: "", name: "Roo", avatar: null },
-  { link: "", name: "Roo", avatar: null },
-  { link: "", name: "Roo", avatar: null },
-  { link: "", name: "Roo", avatar: null },
-  { link: "", name: "Roo", avatar: null },
-  { link: "", name: "Roo", avatar: null },
-  { link: "", name: "Roo", avatar: null },
-  { link: "", name: "Roo", avatar: null },
-  { link: "", name: "Roo", avatar: null },
-  { link: "", name: "Roo", avatar: null },
-  { link: "", name: "Roo", avatar: null },
-  { link: "", name: "Roo", avatar: null },
-  { link: "", name: "Roo", avatar: null },
-];
-
-export default function SideNav({ toggle }: { toggle: () => void }) {
-  const [active, setActive] = useState("Billing");
+export default function SideNav({
+  toggle,
+  friendList,
+}: {
+  toggle: () => void;
+  friendList: FriendList[];
+}) {
+  const [active, setActive] = useState<string | null>(null);
   const router = useRouter();
 
-  const links = data.map((item, i) => (
+  const links = friendList.map(({ user }, i) => (
     <Container
       className={cx(classes.link, "hover:cursor-pointer rounded-md")}
-      data-active={item.name === active || undefined}
-      key={i}
+      data-active={user.name === active || undefined}
+      key={user.id}
       onClick={(event) => {
         event.preventDefault();
         toggle();
-        setActive(item.name);
-        router.replace(`/${44}?friend=${item.name}`);
+        setActive(user.name);
+        router.replace(`/${user.id}?name=${user.name}`);
       }}
     >
-      <Avatar mr="md" src={item.avatar} alt={item.name}>
-        {item.name.charAt(0)}
+      {/* <Avatar mr="md" src={user.image} alt={user.name!}> */}
+      <Avatar mr="md" src={user.image} alt={user.name!}>
+        {user.name!.charAt(0)}
       </Avatar>
-      <span>{item.name}</span>
+      <span>{user.name}</span>
     </Container>
   ));
 

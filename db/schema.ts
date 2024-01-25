@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   text,
   timestamp,
@@ -6,15 +7,92 @@ import {
   primaryKey,
 } from "drizzle-orm/pg-core";
 import { AdapterAccount } from "next-auth/adapters";
+import { v4 as uuidv4 } from "uuid";
 
 export const users = pgTable("user", {
-  id: text("id").notNull().primaryKey(),
+  id: text("id")
+    .notNull()
+    .primaryKey()
+    .$defaultFn(() => uuidv4()),
   name: text("name"),
   email: text("email").notNull(),
   password: text("password"),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
 });
+
+export const messages = pgTable("message", {
+  id: text("id")
+    .notNull()
+    .primaryKey()
+    .$defaultFn(() => uuidv4()),
+  senderId: text("senderId")
+    .notNull()
+    .references(() => users.id),
+  receiverId: text("receiverId")
+    .notNull()
+    .references(() => users.id),
+  content: text("content"),
+  createdAt: timestamp("createdAt").defaultNow(),
+});
+
+export const friendRequest = pgTable("friendRequest", {
+  id: text("id")
+    .notNull()
+    .primaryKey()
+    .$defaultFn(() => uuidv4()),
+  senderId: text("senderId")
+    .notNull()
+    .references(() => users.id),
+  receiverId: text("receiverId")
+    .notNull()
+    .references(() => users.id),
+  createdAt: timestamp("createdAt").defaultNow(),
+});
+
+export const friend = pgTable("friend", {
+  id: text("id")
+    .notNull()
+    .primaryKey()
+    .$defaultFn(() => uuidv4()),
+  userId1: text("userId1")
+    .notNull()
+    .references(() => users.id),
+  userId2: text("userId2")
+    .notNull()
+    .references(() => users.id),
+  createdAt: timestamp("createdAt").defaultNow(),
+});
+
+// export const userRelations = relations(users, ({ many }) => ({
+//   friend: many(friend),
+//   friendRequest: many(friendRequest),
+//   message: many(messages),
+// }));
+
+// export const messageRelations = relations(messages, ({ one }) => ({
+//   sender: one(users, { fields: [messages.senderId], references: [users.id] }),
+//   receiver: one(users, {
+//     fields: [messages.receiverId],
+//     references: [users.id],
+//   }),
+// }));
+
+// export const friendRequestRelations = relations(friendRequest, ({ one }) => ({
+//   sender: one(users, {
+//     fields: [friendRequest.senderId],
+//     references: [users.id],
+//   }),
+//   receiver: one(users, {
+//     fields: [friendRequest.receiverId],
+//     references: [users.id],
+//   }),
+// }));
+
+// export const friendRelations = relations(friend, ({ one }) => ({
+//   user1: one(users, { fields: [friend.userId1], references: [users.id] }),
+//   user2: one(users, { fields: [friend.userId2], references: [users.id] }),
+// }));
 
 export const accounts = pgTable(
   "account",

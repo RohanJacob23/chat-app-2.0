@@ -19,10 +19,10 @@ import { signIn } from "next-auth/react";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { users } from "../../../db/schema";
-import { v4 as uuidv4 } from "uuid";
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 import { useRouter } from "next/navigation";
+import { eq } from "drizzle-orm";
 
 export default function AuthenticationForm({
   DATABASE_URL,
@@ -73,24 +73,42 @@ export default function AuthenticationForm({
   }) => {
     setIsLoading(true);
     if (type === "register") {
-      toast.promise(
-        async () =>
-          await db.insert(users).values({
-            id: uuidv4(),
-            email: values.email,
-            name: values.name,
-            password: values.password,
-          }),
-        {
-          loading: "Creating account...",
-          success: "Account created",
-          error: "Error Creating Account",
-          finally: () => {
-            setIsLoading(false);
-            toggle();
-          },
-        }
-      );
+      const [checkIfAlreadyUserExists] = await db
+        .select()
+        .from(users)
+        .where(eq(users.email, values.email));
+      if (checkIfAlreadyUserExists) {
+        toast.error("User already exists", {
+          description: "Please login to continue",
+        });
+        setIsLoading(false);
+        toggle();
+      } else
+        toast.promise(
+          async () =>
+            await db.insert(users).values({
+              // id: uuidv4(),
+              email: values.email,
+              name: values.name,
+              password: values.password,
+            }),
+
+          {
+            loading: "Creating account...",
+            success: (
+              <span className="font-semibold">
+                Account created!
+                <br />
+                Please login to continue
+              </span>
+            ),
+            error: "Error Creating Account",
+            finally: () => {
+              setIsLoading(false);
+              toggle();
+            },
+          }
+        );
     } else {
       try {
         const res = await signIn("credentials", {
@@ -99,8 +117,8 @@ export default function AuthenticationForm({
           redirect: false,
         });
         if (!res) return;
-        if (!res.ok) toast.error("Invalid credentials!!");
-        router.push("/");
+        if (res.ok) router.push("/");
+        else toast.error("Invalid credentials!!");
       } finally {
         setIsLoading(false);
       }

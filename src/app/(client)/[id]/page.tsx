@@ -1,65 +1,47 @@
-import { Avatar, Flex, ScrollArea, Text } from "@mantine/core";
+import { ScrollArea } from "@mantine/core";
 import React from "react";
+import { messages, users } from "../../../../db/schema";
+import { db } from "../../../../db";
+import { and, eq, or } from "drizzle-orm";
+import { authOptions } from "@/authOptions";
+import { User, getServerSession } from "next-auth";
+import ChatSection from "@/components/sections/ChatSection";
+import { notFound } from "next/navigation";
 
-export default function page({ params: { id } }: { params: { id: string } }) {
+export default async function page({
+  params: { id },
+}: {
+  params: { id: string };
+}) {
+  const session = await getServerSession(authOptions);
+
+  const [friend] = await db.select().from(users).where(eq(users.id, id));
+
+  const chats = await db
+    .select()
+    .from(messages)
+    .where(
+      and(
+        or(eq(messages.senderId, id), eq(messages.receiverId, id)),
+        or(
+          eq(messages.senderId, session?.user.id!),
+          eq(messages.receiverId, session?.user.id!)
+        )
+      )
+    );
+
+  chats.sort((a, b) => a.createdAt!.getTime() - b.createdAt!.getTime());
+
+  if (!friend) return notFound();
+
   return (
     <ScrollArea w="100%" offsetScrollbars scrollbarSize={6} type="never">
       <section className="flex flex-col gap-4 w-full">
-        <Flex
-          direction={"row-reverse"}
-          gap={"xs"}
-          align={"center"}
-          className="self-end"
-        >
-          <Avatar src={null}>R</Avatar>
-          <Text className="bg-[var(--mantine-color-blue-filled)] p-2 px-4 rounded-2xl shadow-md max-w-52 md:max-w-80 text-base">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil
-            tempora nam quia aliquam, alias aliquid dicta exercitationem
-            excepturi rerum eligendi officiis iusto nobis ducimus fugiat
-            assumenda nostrum! Aliquid, nihil ipsa.
-          </Text>
-        </Flex>
-
-        <Flex
-          direction={"row"}
-          gap={"xs"}
-          align={"center"}
-          className="self-start"
-        >
-          <Avatar src={null}>R</Avatar>
-          <Text className="bg-[var(--mantine-color-default)] p-2 px-4 rounded-2xl shadow-md max-w-52 md:max-w-80 text-base">
-            Hello world
-          </Text>
-        </Flex>
-
-        <Flex
-          direction={"row-reverse"}
-          gap={"xs"}
-          align={"center"}
-          className="self-end"
-        >
-          <Avatar src={null}>R</Avatar>
-          <Text className="bg-[var(--mantine-color-blue-filled)] p-2 px-4 rounded-2xl shadow-md max-w-52 md:max-w-80 text-base">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil
-            tempora
-          </Text>
-        </Flex>
-
-        {Array.from({ length: 5 }, (_, i) => (
-          <Flex
-            key={i}
-            direction={"row-reverse"}
-            gap={"xs"}
-            align={"center"}
-            className="self-end"
-          >
-            <Avatar src={null}>R</Avatar>
-            <Text className="bg-[var(--mantine-color-blue-filled)] p-2 px-4 rounded-2xl shadow-md max-w-52 md:max-w-80 text-base">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil
-              tempora
-            </Text>
-          </Flex>
-        ))}
+        <ChatSection
+          messages={chats}
+          friend={friend}
+          user={session?.user as User}
+        />
       </section>
     </ScrollArea>
   );
