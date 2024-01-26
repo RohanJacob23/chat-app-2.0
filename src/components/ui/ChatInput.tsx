@@ -6,7 +6,8 @@ import { IconSend2 } from "@tabler/icons-react";
 import { drizzle } from "drizzle-orm/neon-http";
 import React from "react";
 import { messages } from "../../../db/schema";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
+import axios from "axios";
 
 export default function ChatInput({
   DATABASE_URL,
@@ -17,19 +18,20 @@ export default function ChatInput({
 }) {
   const [chat, setChat] = React.useState("");
   const params = useParams<{ id?: string }>();
+  const searchParams = useSearchParams();
   const router = useRouter();
 
   const sql = neon(DATABASE_URL!);
   const db = drizzle(sql);
 
   const sendMessage = async () => {
-    await db
-      .insert(messages)
-      .values({ senderId: userId!, content: chat, receiverId: params.id! })
-      .finally(() => {
-        router.refresh();
-        setChat("");
-      });
+    await axios.post("/api/send_message", {
+      message: chat,
+      receiverId: params.id!,
+      senderId: userId!,
+      friendId: searchParams.get("friendId"),
+    });
+    setChat("");
   };
 
   return (
@@ -38,7 +40,7 @@ export default function ChatInput({
       w="100%"
       classNames={{ input: "py-3" }}
       minRows={1}
-      maxRows={3}
+      maxRows={1}
       autosize
       required
       rightSection={
@@ -47,7 +49,7 @@ export default function ChatInput({
           size="lg"
           mr={20}
           onClick={sendMessage}
-          disabled={!params.id}
+          disabled={!params.id || chat.length === 0}
         >
           <IconSend2 style={{ width: "70%", height: "70%" }} stroke={1.5} />
         </ActionIcon>

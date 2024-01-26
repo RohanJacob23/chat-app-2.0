@@ -38,6 +38,7 @@ export default async function page({
     <ScrollArea w="100%" offsetScrollbars scrollbarSize={6} type="never">
       <section className="flex flex-col gap-4 w-full">
         <ChatSection
+          API_KEY={process.env.PUSHER_KEY!}
           messages={chats}
           friend={friend}
           user={session?.user as User}

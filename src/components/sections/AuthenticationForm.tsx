@@ -17,7 +17,7 @@ import {
 import { GoogleButton } from "@/components/ui/GoogleButton";
 import { signIn } from "next-auth/react";
 import { toast } from "sonner";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { users } from "../../../db/schema";
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
@@ -55,8 +55,10 @@ export default function AuthenticationForm({
     },
   });
 
+  const formRef = useRef(form);
+
   useEffect(() => {
-    form.reset();
+    formRef.current.reset();
   }, [type]);
 
   /**

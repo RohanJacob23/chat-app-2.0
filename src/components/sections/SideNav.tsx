@@ -17,7 +17,7 @@ export default function SideNav({
   const [active, setActive] = useState<string | null>(null);
   const router = useRouter();
 
-  const links = friendList.map(({ user }, i) => (
+  const links = friendList.map(({ user, friend }, i) => (
     <Container
       className={cx(classes.link, "hover:cursor-pointer rounded-md")}
       data-active={user.name === active || undefined}
@@ -26,7 +26,7 @@ export default function SideNav({
         event.preventDefault();
         toggle();
         setActive(user.name);
-        router.replace(`/${user.id}?name=${user.name}`);
+        router.replace(`/${user.id}?friendId=${friend.id}&name=${user.name}`);
       }}
     >
       {/* <Avatar mr="md" src={user.image} alt={user.name!}> */}
