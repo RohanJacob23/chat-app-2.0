@@ -18,7 +18,7 @@ export async function POST(request: Request) {
 
   await db.insert(messages).values({ senderId, content: message, receiverId });
 
-  pusherServer.trigger(friendId, "temp-event", {
+  await pusherServer.trigger(friendId, "temp-event", {
     message: message,
     senderId,
     receiverId,
